@@ -227,13 +227,33 @@ export class FastColor {
     return this._h;
   }
 
+  /**
+   * @deprecated should use getHSVSaturation or getHSLSaturation instead
+   */
   getSaturation(): number {
+    return this.getHSVSaturation();
+  }
+
+  getHSVSaturation(): number {
     if (typeof this._s === 'undefined') {
       const delta = this.getMax() - this.getMin();
       if (delta === 0) {
         this._s = 0;
       } else {
         this._s = delta / this.getMax();
+      }
+    }
+    return this._s;
+  }
+
+  getHSLSaturation(): number {
+    if (typeof this._s === 'undefined') {
+      const delta = this.getMax() - this.getMin();
+      if (delta === 0) {
+        this._s = 0;
+      } else {
+        const l = this.getLightness();
+        this._s = (delta/255) / (1 - Math.abs(2 * l - 1));
       }
     }
     return this._s;
@@ -384,7 +404,7 @@ export class FastColor {
   toHsl(): HSL {
     return {
       h: this.getHue(),
-      s: this.getSaturation(),
+      s: this.getHSLSaturation(),
       l: this.getLightness(),
       a: this.a,
     };
@@ -393,7 +413,7 @@ export class FastColor {
   /** CSS support color pattern */
   toHslString(): string {
     const h = this.getHue();
-    const s = round(this.getSaturation() * 100);
+    const s = round(this.getHSLSaturation() * 100);
     const l = round(this.getLightness() * 100);
 
     return this.a !== 1
@@ -405,7 +425,7 @@ export class FastColor {
   toHsv(): HSV {
     return {
       h: this.getHue(),
-      s: this.getSaturation(),
+      s: this.getHSVSaturation(),
       v: this.getValue(),
       a: this.a,
     };
@@ -482,7 +502,7 @@ export class FastColor {
   }
 
   private fromHsl({ h, s, l, a }: OptionalA<HSL>): void {
-    this._h = h % 360;
+    this._h = h = h % 360;
     this._s = s;
     this._l = l;
     this.a = typeof a === 'number' ? a : 1;
@@ -492,6 +512,7 @@ export class FastColor {
       this.r = rgb;
       this.g = rgb;
       this.b = rgb;
+      return;
     }
 
     let r = 0,
