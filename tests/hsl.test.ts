@@ -87,5 +87,12 @@ describe('hsl', () => {
 		expect(minCap.getLightness()).toBe(0);
 		expect(maxCap.getLightness()).toBe(1);
 	});
+
+	it('normalizes H outside range for HSL (object input)', () => {
+		// -60 -> 300 (magenta)
+		expect(new FastColor({ h: -60, s: 1, l: 0.5 }).toHexString()).toBe('#ff00ff');
+		// 420 -> 60 (yellow)
+		expect(new FastColor({ h: 420, s: 1, l: 0.5 }).toHexString()).toBe('#ffff00');
+	});
 });
 

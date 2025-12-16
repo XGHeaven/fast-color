@@ -86,7 +86,8 @@ export class FastColor {
 
   // HSV privates
   private _h?: number;
-  private _s?: number;
+  private _hsl_s?: number;
+  private _hsv_s?: number;
   private _l?: number;
   private _v?: number;
 
@@ -143,7 +144,8 @@ export class FastColor {
       this.b = input.b;
       this.a = input.a;
       this._h = input._h;
-      this._s = input._s;
+      this._hsl_s = input._hsl_s;
+      this._hsv_s = input._hsv_s;
       this._l = input._l;
       this._v = input._v;
     } else if (matchFormat('rgb')) {
@@ -235,28 +237,28 @@ export class FastColor {
   }
 
   getHSVSaturation(): number {
-    if (typeof this._s === 'undefined') {
+    if (typeof this._hsv_s === 'undefined') {
       const delta = this.getMax() - this.getMin();
       if (delta === 0) {
-        this._s = 0;
+        this._hsv_s = 0;
       } else {
-        this._s = delta / this.getMax();
+        this._hsv_s = delta / this.getMax();
       }
     }
-    return this._s;
+    return this._hsv_s;
   }
 
   getHSLSaturation(): number {
-    if (typeof this._s === 'undefined') {
+    if (typeof this._hsl_s === 'undefined') {
       const delta = this.getMax() - this.getMin();
       if (delta === 0) {
-        this._s = 0;
+        this._hsl_s = 0;
       } else {
         const l = this.getLightness();
-        this._s = (delta/255) / (1 - Math.abs(2 * l - 1));
+        this._hsl_s = (delta/255) / (1 - Math.abs(2 * l - 1));
       }
     }
-    return this._s;
+    return this._hsl_s;
   }
 
   getLightness(): number {
@@ -502,8 +504,8 @@ export class FastColor {
   }
 
   private fromHsl({ h, s, l, a }: OptionalA<HSL>): void {
-    this._h = h = h % 360;
-    this._s = s;
+    this._h = h = ((h % 360) + 360) % 360;
+    this._hsl_s = s;
     this._l = l;
     this.a = typeof a === 'number' ? a : 1;
 
@@ -550,8 +552,8 @@ export class FastColor {
   }
 
   private fromHsv({ h, s, v, a }: OptionalA<HSV>): void {
-    this._h = h % 360;
-    this._s = s;
+    this._h = h = ((h % 360) + 360) % 360;
+    this._hsv_s = s;
     this._v = v;
     this.a = typeof a === 'number' ? a : 1;
 
