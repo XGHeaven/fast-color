@@ -2,7 +2,7 @@ import { FastColor } from '../src';
 
 describe('hsl', () => {
 	// Unified hex<->hsl fixtures
-	const hexHslFixtures: Array<{ hex: string; hsl: { h: number; s: number; l: number } }> = [
+	const hexHslFixtures: { hex: string; hsl: { h: number; s: number; l: number } }[] = [
 		// Boundaries
 		{ hex: '#000000', hsl: { h: 0, s: 0, l: 0 } },
 		{ hex: '#ffffff', hsl: { h: 0, s: 0, l: 1 } },
@@ -44,7 +44,7 @@ describe('hsl', () => {
 		expect(turn.getLightness()).toBeCloseTo(base.getLightness(), 4);
 	});
 
-	const hslaAlphaCases: Array<[string, string, number]> = [
+	const hslaAlphaCases: [string, string, number][] = [
 		['hsla(251, 100%, 38%, 0.5)', 'hsla(251,100%,38%,0.5)', 0.5],
 		['hsla(120, 25%, 33%, 0.7)', 'hsla(120,25%,33%,0.7)', 0.7],
 	];

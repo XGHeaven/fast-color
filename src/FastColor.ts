@@ -503,8 +503,9 @@ export class FastColor {
     }
   }
 
-  private fromHsl({ h, s, l, a }: OptionalA<HSL>): void {
-    this._h = h = ((h % 360) + 360) % 360;
+  private fromHsl({ h: _h, s, l, a }: OptionalA<HSL>): void {
+    const h = ((_h % 360) + 360) % 360;
+    this._h = h;
     this._hsl_s = s;
     this._l = l;
     this.a = typeof a === 'number' ? a : 1;
@@ -551,8 +552,9 @@ export class FastColor {
     this.b = round((b + lightnessModification) * 255);
   }
 
-  private fromHsv({ h, s, v, a }: OptionalA<HSV>): void {
-    this._h = h = ((h % 360) + 360) % 360;
+  private fromHsv({ h: _h, s, v, a }: OptionalA<HSV>): void {
+    const h = ((_h % 360) + 360) % 360;
+    this._h = h;
     this._hsv_s = s;
     this._v = v;
     this.a = typeof a === 'number' ? a : 1;
